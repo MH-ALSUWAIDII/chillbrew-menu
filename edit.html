@@ -39,6 +39,7 @@
     flex:1 1 240px;min-width:0;
   }
   input{
+    min-width:0;
     font-family:inherit;font-size:inherit;color:var(--ink);background:transparent;
     border:0;border-bottom:1.5px dashed var(--rule);padding:5px 2px;border-radius:0;
   }
@@ -47,7 +48,7 @@
     font-family:"Courier Prime",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
     color:var(--ink-soft);margin:18px 0 4px;
   }
-  .row{display:grid;grid-template-columns:1fr 6.5rem auto auto auto;gap:8px;align-items:center;padding:5px 0}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) 4.6rem auto auto auto;gap:6px;align-items:center;padding:5px 0}
   .row .price{font-family:"Courier Prime",monospace;font-variant-numeric:tabular-nums;text-align:right}
   button{
     font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
@@ -55,7 +56,12 @@
     padding:7px 11px;cursor:pointer;
   }
   button:hover{border-color:var(--ink)}
-  button.icon{padding:5px 9px;border-radius:8px}
+  button.icon{padding:5px 8px;border-radius:8px;line-height:1}
+  @media (max-width:520px){
+    .row{grid-template-columns:minmax(0,1fr) 3.6rem auto auto auto;gap:4px}
+    .row input{font-size:16px}
+    button.icon{padding:4px 6px;font-size:10px}
+  }
   button.danger:hover{border-color:var(--warn);color:var(--warn)}
   button.solid{background:var(--chip);color:var(--chip-ink);border-color:var(--chip)}
   button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}

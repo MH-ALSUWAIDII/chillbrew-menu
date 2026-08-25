@@ -1,0 +1,187 @@
+{
+  "shop": "chillbrew",
+  "tagline": "Signature brews, cold things, and something sweet on the side.",
+  "currency": "AED",
+  "footnote": "All prices in AED",
+  "sections": [
+    {
+      "id": "coffee",
+      "tab": "Coffee",
+      "title": "Specialty Coffees",
+      "note": "From classic espresso to unique lattes — built for every coffee lover.",
+      "groups": [
+        {
+          "label": "Coffee",
+          "items": [
+            {
+              "name": "Babycino",
+              "price": 12
+            },
+            {
+              "name": "Espresso",
+              "price": 19
+            },
+            {
+              "name": "Long Black",
+              "price": 21
+            },
+            {
+              "name": "Piccolo",
+              "price": 23
+            },
+            {
+              "name": "Cortado",
+              "price": 24
+            },
+            {
+              "name": "Dirty Espresso",
+              "price": 25
+            },
+            {
+              "name": "Flat White",
+              "price": 26
+            },
+            {
+              "name": "Cappuccino",
+              "price": 28
+            },
+            {
+              "name": "Spanish Cortado",
+              "price": 28
+            },
+            {
+              "name": "Affogato",
+              "price": 30
+            },
+            {
+              "name": "Spanish Latte",
+              "price": 30
+            },
+            {
+              "name": "Cold Brew",
+              "price": 31
+            },
+            {
+              "name": "V60",
+              "price": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "matcha",
+      "tab": "Matcha",
+      "title": "Matcha",
+      "note": "Whisked to order, hot or over ice.",
+      "art": "matcha",
+      "groups": [
+        {
+          "label": "",
+          "items": [
+            {
+              "name": "Classic Matcha Latte",
+              "price": 33
+            },
+            {
+              "name": "Matcha Chill",
+              "price": 35
+            },
+            {
+              "name": "Pink Foam Matcha",
+              "price": 35
+            },
+            {
+              "name": "Salted Foam Matcha",
+              "price": 35
+            },
+            {
+              "name": "Cloudy Matcha",
+              "price": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drinks",
+      "tab": "Drinks",
+      "title": "The Bar",
+      "note": "Iced, fruity, fizzy — the cold side of the counter.",
+      "art": "icecup",
+      "groups": [
+        {
+          "label": "Other Drinks",
+          "items": [
+            {
+              "name": "Berry",
+              "price": 29
+            },
+            {
+              "name": "Peach",
+              "price": 29
+            },
+            {
+              "name": "Iced Hibiscus",
+              "price": 30
+            },
+            {
+              "name": "Midnight Foam",
+              "price": 30
+            },
+            {
+              "name": "AB Tonic",
+              "price": 30
+            },
+            {
+              "name": "Sunset",
+              "price": 30
+            },
+            {
+              "name": "Mango Chill",
+              "price": 33
+            },
+            {
+              "name": "Pistachio Chill",
+              "price": 38
+            },
+            {
+              "name": "Acai Smoothie",
+              "price": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desserts",
+      "tab": "Desserts",
+      "title": "Desserts",
+      "note": "Handcrafted, from rich chocolate to mango — made for the sweet craving.",
+      "boxed": true,
+      "groups": [
+        {
+          "label": "Treats",
+          "items": [
+            {
+              "name": "Kinder Cookies",
+              "price": 15
+            },
+            {
+              "name": "Kinder Brownie",
+              "price": 15
+            },
+            {
+              "name": "Mango Graham",
+              "price": 30
+            },
+            {
+              "name": "Açaí Bowl",
+              "price": 41
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

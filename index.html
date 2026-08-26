@@ -180,6 +180,17 @@
   .skeleton{padding:60px 0;color:var(--ink-soft);font-size:17px}
   .oops{padding:40px 0}
   .oops a{color:var(--ink)}
+
+  /* name-only mode: the sign, not the menu */
+  .name-only .bar{display:none}
+  .name-only .wrap{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;text-align:center}
+  .name-only .hero{padding:0}
+  .name-only h1{font-size:clamp(72px,26vw,124px)}
+  .name-only .lede{display:none}
+  .name-only .tag{margin-top:18px}
+  .name-only .hero img{position:static;width:min(58%,230px);margin:30px auto 0;display:block}
+  .name-only main{display:none}
+  .name-only footer{margin-top:auto;justify-content:center}
 </style>
 
 <div class="bar">
@@ -253,6 +264,12 @@
   fetch('menu.json?v=' + Date.now())
     .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(data => {
+      if (data.show_menu === false) {
+        document.body.classList.add('name-only');
+        document.getElementById('menu').innerHTML = '';
+        document.getElementById('footnote').textContent = '';
+        return;
+      }
       const currency = data.currency || 'AED';
       document.getElementById('tabs').innerHTML =
         data.sections.map(s => `<a href="#${esc(s.id)}">${esc(s.tab || s.title)}</a>`).join('');

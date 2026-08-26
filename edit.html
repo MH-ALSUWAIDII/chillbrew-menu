@@ -99,6 +99,14 @@
     </ol>
   </div>
 
+  <div class="steps" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <div style="margin-right:auto">
+      <strong>What the QR shows</strong>
+      <div id="mode-label" style="color:var(--ink-soft)">…</div>
+    </div>
+    <button type="button" id="mode">Switch</button>
+  </div>
+
   <div id="editor"></div>
 
   <p class="add-row"><button type="button" id="add-section">+ Add section</button></p>
@@ -124,6 +132,14 @@
   const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const say = msg => { status.textContent = msg; };
 
+  const drawMode = () => {
+    const hidden = data.show_menu === false;
+    document.getElementById('mode-label').textContent = hidden
+      ? 'Only the shop name — the menu is hidden but still saved here'
+      : 'The full menu with prices';
+    document.getElementById('mode').textContent = hidden ? 'Show the menu' : 'Show name only';
+  };
+
   const draw = () => {
     editor.innerHTML = data.sections.map((sec, si) => `
       <section class="block">
@@ -147,6 +163,7 @@
         `).join('')}
       </section>`).join('');
     json.value = JSON.stringify(data, null, 2);
+    drawMode();
   };
 
   const at = path => {
@@ -192,6 +209,13 @@
       data.sections.splice(to, 0, data.sections.splice(from, 1)[0]);
     } else return;
     draw();
+    say('Unsaved changes — download to publish');
+  });
+
+  document.getElementById('mode').addEventListener('click', () => {
+    data.show_menu = data.show_menu === false;
+    json.value = JSON.stringify(data, null, 2);
+    drawMode();
     say('Unsaved changes — download to publish');
   });
 

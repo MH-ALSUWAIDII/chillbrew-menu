@@ -1,6 +1,6 @@
 {
   "shop": "chillbrew",
-  "show_menu": false,
+  "show_menu": true,
   "tagline": "Signature brews, cold things, and something sweet on the side.",
   "currency": "AED",
   "footnote": "All prices in AED",

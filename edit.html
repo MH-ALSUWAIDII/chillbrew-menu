@@ -88,15 +88,20 @@
 
 <div class="wrap">
   <h1>Menu editor</h1>
-  <p class="lede">Change prices, rename drinks, add or remove items. Nothing here is live until you upload the new <code>menu.json</code> — the QR code and the link never change.</p>
+  <p class="lede">Change prices, rename drinks, add or remove items — then press <strong>Publish</strong>. The QR code and the link never change.</p>
 
-  <div class="steps">
-    <strong>How to publish a change</strong>
-    <ol>
-      <li>Edit below, then press <strong>Download menu.json</strong>.</li>
-      <li>Open <code>github.com/MH-ALSUWAIDII/chillbrew-menu</code> → <code>menu.json</code> → upload or paste the new version and commit.</li>
-      <li>Wait about a minute, then reload the menu page.</li>
-    </ol>
+  <div class="steps" id="setup">
+    <strong>Publishing</strong>
+    <div id="setup-state" style="color:var(--ink-soft);margin-top:4px">Checking…</div>
+    <div id="setup-form" class="hidden" style="margin-top:12px">
+      <p style="margin:0 0 10px">Paste your publish key once. It stays on this phone only — nobody else can publish with it.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input type="password" id="token" placeholder="github_pat_…" autocomplete="off"
+               style="flex:1 1 240px;border:1.5px solid var(--rule);border-radius:8px;padding:9px 10px">
+        <button type="button" id="save-token" class="solid">Save key</button>
+      </div>
+    </div>
+    <p style="margin:10px 0 0"><button type="button" id="forget" class="hidden">Forget this key</button></p>
   </div>
 
   <div class="steps" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
@@ -119,7 +124,8 @@
     <span class="status" id="status">Loading…</span>
     <button type="button" id="toggle-json">Show JSON</button>
     <button type="button" id="copy">Copy</button>
-    <button type="button" id="download" class="solid">Download menu.json</button>
+    <button type="button" id="download">Download</button>
+    <button type="button" id="publish" class="solid">Publish</button>
   </div>
 </div>
 
@@ -245,6 +251,88 @@
     URL.revokeObjectURL(a.href);
     say('Downloaded — now upload it to GitHub');
   });
+
+  /* ---- publish straight to the live site ---- */
+  const REPO = 'MH-ALSUWAIDII/chillbrew-menu';
+  const KEY  = 'chillbrew-publish-key';
+  const tokenInput = document.getElementById('token');
+  const setupState = document.getElementById('setup-state');
+  const setupForm  = document.getElementById('setup-form');
+  const forgetBtn  = document.getElementById('forget');
+  const publishBtn = document.getElementById('publish');
+
+  const getKey = () => localStorage.getItem(KEY) || '';
+
+  const drawSetup = () => {
+    const has = !!getKey();
+    setupState.textContent = has
+      ? 'Ready — press Publish and the menu updates by itself.'
+      : 'Not set up yet. Without a key you can still Download the file and upload it to GitHub by hand.';
+    setupForm.classList.toggle('hidden', has);
+    forgetBtn.classList.toggle('hidden', !has);
+    publishBtn.disabled = !has;
+    publishBtn.style.opacity = has ? '1' : '.45';
+  };
+
+  document.getElementById('save-token').addEventListener('click', () => {
+    const v = tokenInput.value.trim();
+    if (!v) return say('Paste the key first');
+    localStorage.setItem(KEY, v);
+    tokenInput.value = '';
+    drawSetup();
+    say('Key saved on this device');
+  });
+
+  forgetBtn.addEventListener('click', () => {
+    localStorage.removeItem(KEY);
+    drawSetup();
+    say('Key removed from this device');
+  });
+
+  const b64 = str => {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    bytes.forEach(b => bin += String.fromCharCode(b));
+    return btoa(bin);
+  };
+
+  const api = (path, init = {}) => fetch('https://api.github.com/repos/' + REPO + path, {
+    ...init,
+    headers: {
+      Authorization: 'Bearer ' + getKey(),
+      Accept: 'application/vnd.github+json',
+      ...(init.headers || {})
+    }
+  });
+
+  publishBtn.addEventListener('click', async () => {
+    if (!getKey()) return say('Set up the publish key first');
+    publishBtn.disabled = true;
+    say('Publishing…');
+    try {
+      const head = await api('/contents/menu.json?ref=main');
+      if (head.status === 401) throw new Error('The key was refused — make a new one');
+      if (!head.ok) throw new Error('Could not read the current menu (' + head.status + ')');
+      const { sha } = await head.json();
+      const res = await api('/contents/menu.json', {
+        method: 'PUT',
+        body: JSON.stringify({
+          message: 'Update menu from the editor',
+          content: b64(JSON.stringify(data, null, 2)),
+          sha
+        })
+      });
+      if (res.status === 409) throw new Error('Someone else just changed it — reload and try again');
+      if (!res.ok) throw new Error('Publish failed (' + res.status + ')');
+      say('Published — live in about a minute');
+    } catch (err) {
+      say(err.message);
+    } finally {
+      publishBtn.disabled = !getKey();
+    }
+  });
+
+  drawSetup();
 
   fetch('menu.json?v=' + Date.now())
     .then(r => r.json())

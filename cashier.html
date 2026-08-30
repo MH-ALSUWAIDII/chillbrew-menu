@@ -91,7 +91,7 @@
 <div id="setup" class="setup hidden">
   <h1>Orders</h1>
   <p>Connect this screen to the order service. It only has to be done once on this device.</p>
-  <input id="in-base" placeholder="https://…workers.dev" autocomplete="off" inputmode="url">
+  <input id="in-base" value="https://menu.ma6.ae/api/orders.php" autocomplete="off" inputmode="url">
   <input id="in-key" type="password" placeholder="Cashier password" autocomplete="off">
   <button class="solid" id="connect">Connect</button>
   <p id="setup-msg" style="margin-top:14px"></p>
@@ -115,7 +115,7 @@
   const $ = id => document.getElementById(id);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-  let base = localStorage.getItem(KEYS.base) || '';
+  let base = localStorage.getItem(KEYS.base) || 'https://menu.ma6.ae/api/orders.php';
   let key  = localStorage.getItem(KEYS.key) || '';
   let soundOn = localStorage.getItem(KEYS.sound) !== 'off';
   let seen = new Set();
@@ -134,7 +134,7 @@
     if (!b || !k) return $('setup-msg').textContent = 'Fill both fields.';
     $('setup-msg').textContent = 'Checking…';
     try {
-      const res = await fetch(b + '/orders?key=' + encodeURIComponent(k));
+      const res = await fetch(b + '?key=' + encodeURIComponent(k));
       if (res.status === 401) return $('setup-msg').textContent = 'Wrong password.';
       if (!res.ok) throw new Error();
       base = b; key = k;
@@ -216,7 +216,7 @@
     const b = e.target.closest('button');
     if (!b) return;
     b.disabled = true;
-    await fetch(base + '/orders/status', {
+    await fetch(base + '?action=status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key, id: b.dataset.id, status: b.dataset.status })
@@ -227,7 +227,7 @@
   async function poll() {
     if (!base || !key) return;
     try {
-      const res = await fetch(base + '/orders?key=' + encodeURIComponent(key));
+      const res = await fetch(base + '?key=' + encodeURIComponent(key));
       if (!res.ok) throw new Error();
       const { orders } = await res.json();
       const fresh = orders.filter(o => o.status === 'new' && !seen.has(o.id));

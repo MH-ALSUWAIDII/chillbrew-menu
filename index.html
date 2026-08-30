@@ -300,7 +300,7 @@
   /* ---- ordering ------------------------------------------------------
      API_BASE is the address of the order service. While it is empty the
      page stays a plain menu — no cart and no buttons anywhere.       */
-  const API_BASE = "";
+  const API_BASE = "https://menu.ma6.ae/api/orders.php";
   const TABLE = new URLSearchParams(location.search).get('t') || '';
   const ORDERING = !!API_BASE && !!TABLE;
 
@@ -367,7 +367,7 @@
         name: li.dataset.item, price: Number(li.dataset.price), qty
       }));
       try {
-        const res = await fetch(API_BASE + '/orders', {
+        const res = await fetch(API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ table: TABLE, items, currency: CURRENCY })
